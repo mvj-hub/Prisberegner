@@ -122,14 +122,8 @@ const filteredStays = DATA.filter((s) => {
 const isMobile =
     typeof window !== "undefined" && window.innerWidth < 768;
 
-  useEffect(() => {
-  const tripStillExists = selectedStay.trips.some(
-    (trip) => trip.id === selectedMainTrip
-  );
-
-  if (!tripStillExists) {
-    setSelectedMainTrip(null);
-  }
+useEffect(() => {
+  setSelectedMainTrip(null);
 
   const defaults = {};
 
@@ -138,7 +132,9 @@ const isMobile =
   });
 
   setSelectedGlobalTrips(defaults);
-}, [selectedStayId, selectedMainTrip]);
+}, [selectedStayId]);
+
+  
 
  const handleMainTripChange = (id) => {
   // klik på samme igen = fravælg
