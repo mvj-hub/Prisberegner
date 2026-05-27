@@ -13,7 +13,7 @@ const COLORS = {
 const DATA = [
   {
     id: "efteraar-2026-19",
-    label: "10. august - 20. december · 19 uger · Efterår 2026",
+    label: "Efterår 2026  ·  10. august - 20. december  ·  19 uger",
     weeks: 19,
     weeklyPrice: 2150,
     trips: [
@@ -25,7 +25,7 @@ const DATA = [
   },
   {
     id: "efteraar-2026-13",
-    label: "21. september - 20. december · 13 uger · Efterår 2026",
+    label: "Efterår 2026  ·  21. september - 20. december  ·  13 uger",
     weeks: 13,
     weeklyPrice: 2150,
     trips: [],
@@ -33,7 +33,7 @@ const DATA = [
   },
   {
     id: "foraar-2027-25",
-    label: "4. januar - 27. juni · 25 uger · Forår 2027",
+    label: "Forår 2027  ·  24. januar - 27. juni  ·  25 uger",
     weeks: 25,
     weeklyPrice: 2200,
     trips: [
@@ -53,7 +53,7 @@ const DATA = [
   },
   {
     id: "foraar-2027-15",
-    label: "15. marts - 27. juni · 15 uger · Forår 2027",
+    label: "Forår 2027  ·  15. marts - 27. juni  ·  15 uger",
     weeks: 15,
     weeklyPrice: 2200,
     trips: [],
@@ -69,7 +69,7 @@ const DATA = [
   },
   {
     id: "efteraar-2027-18",
-    label: "16. august - 19. december · 18 uger · Efterår 2027",
+    label: "Efterår 2027  ·  16. august - 19. december  ·  18 uger",
     weeks: 18,
     weeklyPrice: 2200,
     trips: [
@@ -81,7 +81,7 @@ const DATA = [
   },
   {
     id: "efteraar-2027-13",
-    label: "20. september - 19. december · 13 uger · Efterår 2027",
+    label: "Efterår 2027  ·  20. september - 19. december  ·  13 uger",
     weeks: 13,
     weeklyPrice: 2200,
     trips: [],
