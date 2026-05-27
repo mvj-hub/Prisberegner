@@ -157,7 +157,6 @@ export default function PriceCalculator() {
     >
       {/* LEFT */}
       <div style={{ flex: 1 }}>
-        <h1 style={{ marginBottom: 10 }}>💰 Prisberegner</h1>
 
         {/* OPHOLD */}
         <section>
