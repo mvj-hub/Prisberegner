@@ -17,28 +17,58 @@ const DATA = [
     weeks: 19,
     weeklyPrice: 2150,
     trips: [
-      { id: "bouldering-kjuge", label: "Klatrerejse til Kjugekull (Bouldering, 1. periode)", price: 3500 },
-      { id: "friluft-norge", label: "Vandring i Norge (Friluftsliv, 1. periode)", price: 4000 },
-      { id: "skibums", label: "Skibums", price: 20500 },
+      {
+        id: "bouldering-kjuge",
+        label: "Klatrerejse til Kjugekull (Bouldering, 1. periode)",
+        price: 3500,
+      },
+      {
+        id: "friluft-norge",
+        label: "Vandring i Norge (Friluftsliv, 1. periode)",
+        price: 4000,
+      },
+      {
+        id: "skibums",
+        label: "Skibums",
+        price: 20500,
+      },
     ],
-    globalTrips: [{ id: "south-africa", label: "Sydafrika", price: 15750 }],
+    globalTrips: [
+      {
+        id: "south-africa",
+        label: "Sydafrika",
+        price: 15750,
+      },
+    ],
   },
+
   {
     id: "efteraar-2026-13",
     label: "21. september - 20. december  ·  13 uger",
     weeks: 13,
     weeklyPrice: 2150,
     trips: [],
-    globalTrips: [{ id: "south-africa", label: "Sydafrika", price: 15750 }],
+    globalTrips: [
+      {
+        id: "south-africa",
+        label: "Sydafrika",
+        price: 15750,
+      },
+    ],
   },
+
   {
     id: "foraar-2027-25",
     label: "24. januar - 27. juni  ·  25 uger",
     weeks: 25,
     weeklyPrice: 2200,
     trips: [
-      { id: "friluft-norge", label: "Fjeldski i Norge (Friluftsliv, 1. periode)", price: 4500 },
-      ],
+      {
+        id: "friluft-norge",
+        label: "Fjeldski i Norge (Friluftsliv, 1. periode)",
+        price: 4500,
+      },
+    ],
     globalTrips: [
       {
         id: "catalonia",
@@ -46,11 +76,19 @@ const DATA = [
         price: 7600,
         required: true,
       },
-      { id: "alpine", label: "Alpin skitur i Italien", price: 7500 },
-      { id: "fontainebleau", label: "Klatretur til Fontainebleau i Frankrig", price: 4500 },
-
+      {
+        id: "alpine",
+        label: "Alpin skitur i Italien",
+        price: 7500,
+      },
+      {
+        id: "fontainebleau",
+        label: "Klatretur til Fontainebleau i Frankrig",
+        price: 4500,
+      },
     ],
   },
+
   {
     id: "foraar-2027-15",
     label: "15. marts - 27. juni  ·  15 uger",
@@ -63,103 +101,148 @@ const DATA = [
         label: "Catalonien (obligatorisk)",
         price: 7600,
         required: true,
-      },{ id: "fontainebleau", label: "Klatretur til Fontainebleau i Frankrig", price: 4500 },
-
+      },
+      {
+        id: "fontainebleau",
+        label: "Klatretur til Fontainebleau i Frankrig",
+        price: 4500,
+      },
     ],
   },
+
   {
     id: "efteraar-2027-18",
     label: "16. august - 19. december  ·  18 uger",
     weeks: 18,
     weeklyPrice: 2200,
     trips: [
-      { id: "bouldering-kjuge", label: "Klatrerejse til Kjugekull (Bouldering, 1. periode)", price: 3500 },
-      { id: "friluft-norge", label: "Vandring i Norge (Friluftsliv, 1. periode)", price: 4500 },
-      { id: "skibums", label: "Skibums", price: 22000 },
+      {
+        id: "bouldering-kjuge",
+        label: "Klatrerejse til Kjugekull (Bouldering, 1. periode)",
+        price: 3500,
+      },
+      {
+        id: "friluft-norge",
+        label: "Vandring i Norge (Friluftsliv, 1. periode)",
+        price: 4500,
+      },
+      {
+        id: "skibums",
+        label: "Skibums",
+        price: 22000,
+      },
     ],
-    globalTrips: [{ id: "south-africa", label: "Sydafrika", price: 17000 }],
+    globalTrips: [
+      {
+        id: "south-africa",
+        label: "Sydafrika",
+        price: 17000,
+      },
+    ],
   },
+
   {
     id: "efteraar-2027-13",
     label: "20. september - 19. december  ·  13 uger",
     weeks: 13,
     weeklyPrice: 2200,
     trips: [],
-    globalTrips: [{ id: "south-africa", label: "Sydafrika", price: 17000 }],
+    globalTrips: [
+      {
+        id: "south-africa",
+        label: "Sydafrika",
+        price: 17000,
+      },
+    ],
   },
 ];
 
 export default function PriceCalculator() {
   const [selectedStayId, setSelectedStayId] = useState(DATA[0].id);
   const [selectedYear, setSelectedYear] = useState("2026");
-const [selectedSeason, setSelectedSeason] = useState("Efterår");
-const [selectedMainTrip, setSelectedMainTrip] = useState(null);
+  const [selectedSeason, setSelectedSeason] = useState("Efterår");
+  const [selectedMainTrip, setSelectedMainTrip] = useState(null);
   const [selectedGlobalTrips, setSelectedGlobalTrips] = useState({});
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const selectedStay = DATA.find((s) => s.id === selectedStayId);
-  const years = [...new Set(DATA.map((s) => s.label.match(/\d{4}/)[0]))];
+  const selectedStay =
+    DATA.find((s) => s.id === selectedStayId) || DATA[0];
 
-const seasonsForYear = [
-  ...new Set(
-    DATA.filter((s) => s.label.includes(selectedYear)).map((s) =>
-      s.label.includes("juni") ? "Forår" : "Efterår"
-    )
-  ),
-];
+  const years = [
+    ...new Set(
+      DATA.map((s) => {
+        const match = s.label.match(/\d{4}/);
+        return match ? match[0] : "";
+      }).filter(Boolean)
+    ),
+  ];
 
-const filteredStays = DATA.filter((s) => {
-  const yearMatch = s.label.includes(selectedYear);
+  const seasonsForYear = [
+    ...new Set(
+      DATA.filter((s) => s.label.includes(selectedYear)).map((s) =>
+        s.label.includes("juni") ? "Forår" : "Efterår"
+      )
+    ),
+  ];
 
-  const seasonMatch =
-    selectedSeason === "Forår"
-      ? s.label.includes("juni")
-      : s.label.includes("december");
+  const filteredStays = DATA.filter((s) => {
+    const yearMatch = s.label.includes(selectedYear);
 
-  return yearMatch && seasonMatch;
-});
+    const seasonMatch =
+      selectedSeason === "Forår"
+        ? s.label.includes("juni")
+        : s.label.includes("december");
 
-const isMobile =
-    typeof window !== "undefined" && window.innerWidth < 768;
-
-useEffect(() => {
-  setSelectedMainTrip(null);
-
-  const defaults = {};
-
-  selectedStay.globalTrips.forEach((t) => {
-    defaults[t.id] = !!t.required;
+    return yearMatch && seasonMatch;
   });
 
-  setSelectedGlobalTrips(defaults);
-}, [selectedStayId]);
+  const isMobile =
+    typeof window !== "undefined" &&
+    window.innerWidth < 768;
 
-  
-
- const handleMainTripChange = (id) => {
-  // klik på samme igen = fravælg
-  if (selectedMainTrip === id) {
+  useEffect(() => {
     setSelectedMainTrip(null);
 
-    return;
-  }
+    const defaults = {};
 
-  setSelectedMainTrip(id);
+    selectedStay.globalTrips.forEach((t) => {
+      defaults[t.id] = !!t.required;
+    });
 
-  // skibums kan ikke kombineres med sydafrika
-  if (id === "skibums") {
-    setSelectedGlobalTrips((prev) => ({
-      ...prev,
-      "south-africa": false,
-    }));
-  }
-};
+    setSelectedGlobalTrips(defaults);
+  }, [selectedStayId]);
+
+  const handleMainTripChange = (id) => {
+    // klik på samme igen = fravælg
+    if (selectedMainTrip === id) {
+      setSelectedMainTrip(null);
+      return;
+    }
+
+    setSelectedMainTrip(id);
+
+    // skibums kan ikke kombineres med sydafrika
+    if (id === "skibums") {
+      setSelectedGlobalTrips((prev) => ({
+        ...prev,
+        "south-africa": false,
+      }));
+    }
+  };
 
   const toggleGlobalTrip = (id) => {
     setSelectedGlobalTrips((prev) => {
-      const next = { ...prev, [id]: !prev[id] };
+      const next = {
+        ...prev,
+        [id]: !prev[id],
+      };
 
-      if (id === "south-africa" && next[id] && selectedMainTrip === "skibums") {
+      // vælger sydafrika → fjern skibums
+      if (
+        id === "south-africa" &&
+        next[id] &&
+        selectedMainTrip === "skibums"
+      ) {
         setSelectedMainTrip(null);
       }
 
@@ -167,25 +250,32 @@ useEffect(() => {
     });
   };
 
-const schoolPrice =
-  selectedStay.weeks * selectedStay.weeklyPrice;
+  const schoolPrice =
+    selectedStay.weeks * selectedStay.weeklyPrice;
 
-const materialPrice =
-  selectedStay.weeks * MATERIAL_PRICE_PER_WEEK;
+  const materialPrice =
+    selectedStay.weeks * MATERIAL_PRICE_PER_WEEK;
 
-const basePrice =
-  schoolPrice + materialPrice;
+  const basePrice =
+    schoolPrice + materialPrice;
 
   const mainTripPrice =
-    selectedStay.trips.find((t) => t.id === selectedMainTrip)?.price || 0;
+    selectedStay.trips.find(
+      (t) => t.id === selectedMainTrip
+    )?.price || 0;
 
   const globalTripsPrice =
     selectedStay.globalTrips.reduce((sum, t) => {
-      return selectedGlobalTrips[t.id] ? sum + t.price : sum;
+      return selectedGlobalTrips[t.id]
+        ? sum + t.price
+        : sum;
     }, 0);
 
   const total =
-    basePrice + mainTripPrice + globalTripsPrice + ENROLLMENT_FEE;
+    basePrice +
+    mainTripPrice +
+    globalTripsPrice +
+    ENROLLMENT_FEE;
 
   const card = {
     border: "1px solid #e5e5e5",
@@ -211,120 +301,126 @@ const basePrice =
     >
       {/* LEFT */}
       <div style={{ flex: 1 }}>
-        {/* OPHOLD */}
         <section>
-  <h2>1. Vælg ophold</h2>
+          <h2>1. Vælg ophold</h2>
 
-  {/* ÅRSTAL */}
-  <div
-    style={{
-      display: "flex",
-      gap: 12,
-      marginBottom: 18,
-      flexWrap: "wrap",
-    }}
-  >
-    {years.map((year) => {
-      const selected = selectedYear === year;
+          {/* ÅRSTAL */}
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              marginBottom: 18,
+              flexWrap: "wrap",
+            }}
+          >
+            {years.map((year) => {
+              const selected = selectedYear === year;
 
-      return (
-        <button
-          key={year}
-          onClick={() => {
-            setSelectedYear(year);
+              return (
+                <button
+                  key={year}
+                  onClick={() => setSelectedYear(year)}
+                  style={{
+                    padding: "12px 18px",
+                    borderRadius: 14,
+                    border: selected
+                      ? `2px solid ${COLORS.primary}`
+                      : "1px solid #ddd",
+                    background: selected
+                      ? COLORS.soft
+                      : "#fff",
+                    cursor: "pointer",
+                    fontWeight: 700,
+                  }}
+                >
+                  {year}
+                </button>
+              );
+            })}
+          </div>
 
-            const availableSeasons = DATA.filter((s) =>
-              s.label.includes(year)
-            ).map((s) =>
-              s.label.includes("juni") ? "Forår" : "Efterår"
+          {/* SÆSON */}
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              marginBottom: 20,
+              flexWrap: "wrap",
+            }}
+          >
+            {seasonsForYear.map((season) => {
+              const selected =
+                selectedSeason === season;
+
+              return (
+                <button
+                  key={season}
+                  onClick={() =>
+                    setSelectedSeason(season)
+                  }
+                  style={{
+                    padding: "12px 18px",
+                    borderRadius: 14,
+                    border: selected
+                      ? `2px solid ${COLORS.primary}`
+                      : "1px solid #ddd",
+                    background: selected
+                      ? COLORS.soft
+                      : "#fff",
+                    cursor: "pointer",
+                    fontWeight: 700,
+                  }}
+                >
+                  {season}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* PERIODER */}
+          {filteredStays.map((stay) => {
+            const selected =
+              selectedStayId === stay.id;
+
+            return (
+              <div
+                key={stay.id}
+                onClick={() =>
+                  setSelectedStayId(stay.id)
+                }
+                style={{
+                  ...card,
+                  cursor: "pointer",
+                  background: selected
+                    ? COLORS.soft
+                    : "#fff",
+                  border: selected
+                    ? `2px solid ${COLORS.primary}`
+                    : "1px solid #ddd",
+                }}
+              >
+                <div style={{ fontWeight: 700 }}>
+                  {stay.label}
+                </div>
+
+                <div
+                  style={{
+                    color: "#666",
+                    marginTop: 6,
+                  }}
+                >
+                  {stay.weeks} uger ·{" "}
+                  {stay.weeklyPrice.toLocaleString(
+                    "da-DK"
+                  )}{" "}
+                  kr/uge
+                </div>
+              </div>
             );
+          })}
+        </section>
 
-            if (!availableSeasons.includes(selectedSeason)) {
-              setSelectedSeason(availableSeasons[0]);
-            }
-          }}
-          style={{
-            padding: "12px 18px",
-            borderRadius: 14,
-            border: selected
-              ? `2px solid ${COLORS.primary}`
-              : "1px solid #ddd",
-            background: selected ? COLORS.soft : "#fff",
-            cursor: "pointer",
-            fontWeight: 700,
-          }}
-        >
-          {year}
-        </button>
-      );
-    })}
-  </div>
-
-  {/* FORÅR / EFTERÅR */}
-  <div
-    style={{
-      display: "flex",
-      gap: 12,
-      marginBottom: 20,
-      flexWrap: "wrap",
-    }}
-  >
-    {seasonsForYear.map((season) => {
-      const selected = selectedSeason === season;
-
-      return (
-        <button
-          key={season}
-          onClick={() => setSelectedSeason(season)}
-          style={{
-            padding: "12px 18px",
-            borderRadius: 14,
-            border: selected
-              ? `2px solid ${COLORS.primary}`
-              : "1px solid #ddd",
-            background: selected ? COLORS.soft : "#fff",
-            cursor: "pointer",
-            fontWeight: 700,
-          }}
-        >
-          {season}
-        </button>
-      );
-    })}
-  </div>
-
-  {/* PERIODER */}
-  {filteredStays.map((stay) => {
-    const selected = selectedStayId === stay.id;
-
-    return (
-      <div
-        key={stay.id}
-        onClick={() => setSelectedStayId(stay.id)}
-        style={{
-          ...card,
-          cursor: "pointer",
-          background: selected ? COLORS.soft : "#fff",
-          border: selected
-            ? `2px solid ${COLORS.primary}`
-            : "1px solid #ddd",
-          boxShadow: selected
-            ? "0 10px 25px rgba(0,0,0,0.08)"
-            : "none",
-        }}
-      >
-        <div style={{ fontWeight: 700 }}>{stay.label}</div>
-
-        <div style={{ color: "#666", marginTop: 6 }}>
-          {stay.weeks} uger ·{" "}
-          {stay.weeklyPrice.toLocaleString("da-DK")} kr/uge
-        </div>
-      </div>
-    );
-  })}
-</section>
-
-        {/* HOVEDFAG */}
+        {/* HOVEDFAGSREJSER */}
         <section style={{ marginTop: 30 }}>
           <h2>2. Hovedfagsrejser</h2>
 
@@ -333,27 +429,34 @@ const basePrice =
           </p>
 
           {selectedStay.trips.length === 0 && (
-  <div
-    style={{
-      ...card,
-      color: "#666",
-      fontStyle: "italic",
-      background: "#fafafa",
-    }}
-  >
-    Ingen hovedfagsrejser i denne periode.
-  </div>
-)}{selectedStay.trips.map((trip) => {
-            const selected = selectedMainTrip === trip.id;
+            <div
+              style={{
+                ...card,
+                color: "#666",
+                fontStyle: "italic",
+                background: "#fafafa",
+              }}
+            >
+              Ingen hovedfagsrejser i denne periode.
+            </div>
+          )}
+
+          {selectedStay.trips.map((trip) => {
+            const selected =
+              selectedMainTrip === trip.id;
 
             return (
               <div
                 key={trip.id}
-                onClick={() => handleMainTripChange(trip.id)}
+                onClick={() =>
+                  handleMainTripChange(trip.id)
+                }
                 style={{
                   ...card,
                   cursor: "pointer",
-                  background: selected ? COLORS.soft : "#fff",
+                  background: selected
+                    ? COLORS.soft
+                    : "#fff",
                   border: selected
                     ? `2px solid ${COLORS.primary}`
                     : "1px solid #ddd",
@@ -362,20 +465,32 @@ const basePrice =
                 <label
                   style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent:
+                      "space-between",
                   }}
                 >
                   <span>
                     <input
                       type="radio"
                       checked={selected}
-                      onChange={() => handleMainTripChange(trip.id)}
+                      onChange={() =>
+                        handleMainTripChange(
+                          trip.id
+                        )
+                      }
                     />{" "}
                     {trip.label}
                   </span>
 
-                  <strong style={{ color: COLORS.primary }}>
-                    {trip.price.toLocaleString("da-DK")} kr
+                  <strong
+                    style={{
+                      color: COLORS.primary,
+                    }}
+                  >
+                    {trip.price.toLocaleString(
+                      "da-DK"
+                    )}{" "}
+                    kr
                   </strong>
                 </label>
               </div>
@@ -383,27 +498,17 @@ const basePrice =
           })}
         </section>
 
-        {/* FÆLLES REJSER */}
+        {/* FÆLLESREJSER */}
         <section style={{ marginTop: 30 }}>
           <h2>3. Fælles rejser</h2>
 
-          {selectedStay.globalTrips.length === 0 && (
-  <div
-    style={{
-      ...card,
-      color: "#666",
-      fontStyle: "italic",
-      background: "#fafafa",
-    }}
-  >
-    Ingen fælles rejser i denne periode
-  </div>
-)}{selectedStay.globalTrips.map((trip) => {
+          {selectedStay.globalTrips.map((trip) => {
             const disabled =
               trip.id === "south-africa" &&
               selectedMainTrip === "skibums";
 
-            const checked = selectedGlobalTrips[trip.id];
+            const checked =
+              selectedGlobalTrips[trip.id];
 
             return (
               <div
@@ -411,29 +516,43 @@ const basePrice =
                 style={{
                   ...card,
                   opacity: disabled ? 0.4 : 1,
-                  cursor: disabled ? "not-allowed" : "pointer",
-                  background: checked ? COLORS.soft : "#fff",
+                  background: checked
+                    ? COLORS.soft
+                    : "#fff",
                 }}
               >
                 <label
                   style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent:
+                      "space-between",
                   }}
                 >
                   <span>
                     <input
                       type="checkbox"
                       checked={checked || false}
-                      disabled={disabled || trip.required}
-                      onChange={() => toggleGlobalTrip(trip.id)}
+                      disabled={
+                        disabled || trip.required
+                      }
+                      onChange={() =>
+                        toggleGlobalTrip(trip.id)
+                      }
                     />{" "}
                     {trip.label}
                   </span>
 
-                  <strong style={{ color: COLORS.primary }}>
-                    {trip.price.toLocaleString("da-DK")} kr
-                    {trip.required && " (obligatorisk)"}
+                  <strong
+                    style={{
+                      color: COLORS.primary,
+                    }}
+                  >
+                    {trip.price.toLocaleString(
+                      "da-DK"
+                    )}{" "}
+                    kr
+                    {trip.required &&
+                      " (obligatorisk)"}
                   </strong>
                 </label>
               </div>
@@ -452,101 +571,57 @@ const basePrice =
             background: COLORS.soft,
             borderRadius: 18,
             padding: 20,
+            height: "fit-content",
           }}
         >
           <h2>Din pris</h2>
+
           <hr />
 
-                <p>Ophold: {schoolPrice.toLocaleString("da-DK")} kr.</p>
-                <p> Materialepris:    {materialPrice.toLocaleString("da-DK")} kr.</p>
-                <p>Hovedfagsrejse: {mainTripPrice.toLocaleString("da-DK")} kr.</p>
-                <p>Fælles rejser: {globalTripsPrice.toLocaleString("da-DK")} kr.</p>
-                <p>Indmeldelse: {ENROLLMENT_FEE.toLocaleString("da-DK")} kr.</p>
+          <p>
+            Ophold:{" "}
+            {schoolPrice.toLocaleString(
+              "da-DK"
+            )}{" "}
+            kr.
+          </p>
+
+          <p>
+            Materialepris:{" "}
+            {materialPrice.toLocaleString(
+              "da-DK"
+            )}{" "}
+            kr.
+          </p>
+
+          <p>
+            Hovedfagsrejse:{" "}
+            {mainTripPrice.toLocaleString(
+              "da-DK"
+            )}{" "}
+            kr.
+          </p>
+
+          <p>
+            Fælles rejser:{" "}
+            {globalTripsPrice.toLocaleString(
+              "da-DK"
+            )}{" "}
+            kr.
+          </p>
+
+          <p>
+            Indmeldelse:{" "}
+            {ENROLLMENT_FEE.toLocaleString(
+              "da-DK"
+            )}{" "}
+            kr.
+          </p>
 
           <h1 style={{ color: COLORS.primary }}>
             {total.toLocaleString("da-DK")} kr
           </h1>
         </div>
-      )}
-
-      {/* MOBILE SHEET */}
-      {isMobile && (
-        <>
-          <div
-            onClick={() => setIsSheetOpen(true)}
-            style={{
-              position: "fixed",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              background: COLORS.primary,
-              color: "#fff",
-              padding: 16,
-              textAlign: "center",
-              fontWeight: 700,
-              zIndex: 999,
-            }}
-          >
-           {total.toLocaleString("da-DK")} kr  ·  Se detaljer 
-          </div>
-
-          {isSheetOpen && (
-            <>
-              <div
-                onClick={() => setIsSheetOpen(false)}
-                style={{
-                  position: "fixed",
-                  inset: 0,
-                  background: "rgba(0,0,0,0.4)",
-                  zIndex: 1000,
-                }}
-              />
-
-              <div
-                style={{
-                  position: "fixed",
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: "#fff",
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
-                  padding: 20,
-                  zIndex: 1001,
-                }}
-              >
-                <h2>Din pris</h2>
-                <hr />
-
-                <p>Ophold: {schoolPrice.toLocaleString("da-DK")} kr.</p>
-                <p> Materialepris:    {materialPrice.toLocaleString("da-DK")} kr.</p>
-                <p>Hovedfagsrejse: {mainTripPrice.toLocaleString("da-DK")} kr.</p>
-                <p>Fælles rejser: {globalTripsPrice.toLocaleString("da-DK")} kr.</p>
-                <p>Indmeldelse: {ENROLLMENT_FEE.toLocaleString("da-DK")} kr.</p>
-
-                <h1 style={{ color: COLORS.primary }}>
-                  {total.toLocaleString("da-DK")} kr.
-                </h1>
-
-                <button
-                  onClick={() => setIsSheetOpen(false)}
-                  style={{
-                    width: "100%",
-                    marginTop: 16,
-                    padding: 14,
-                    borderRadius: 12,
-                    border: "none",
-                    background: COLORS.primary,
-                    color: "#fff",
-                    fontWeight: 700,
-                  }}
-                >
-                  Luk
-                </button>
-              </div>
-            </>
-          )}
-        </>
       )}
     </div>
   );
