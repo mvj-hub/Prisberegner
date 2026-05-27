@@ -123,10 +123,14 @@ const isMobile =
     typeof window !== "undefined" && window.innerWidth < 768;
 
   useEffect(() => {
-  // nulstil hovedfag
-  setSelectedMainTrip(null);
+  const tripStillExists = selectedStay.trips.some(
+    (trip) => trip.id === selectedMainTrip
+  );
 
-  // nulstil fællesrejser
+  if (!tripStillExists) {
+    setSelectedMainTrip(null);
+  }
+
   const defaults = {};
 
   selectedStay.globalTrips.forEach((t) => {
@@ -134,18 +138,26 @@ const isMobile =
   });
 
   setSelectedGlobalTrips(defaults);
-}, [selectedStayId]);
+}, [selectedStayId, selectedMainTrip]);
 
-  const handleMainTripChange = (id) => {
-    setSelectedMainTrip(id);
+ const handleMainTripChange = (id) => {
+  // klik på samme igen = fravælg
+  if (selectedMainTrip === id) {
+    setSelectedMainTrip(null);
 
-    if (id === "skibums") {
-      setSelectedGlobalTrips((prev) => ({
-        ...prev,
-        "south-africa": false,
-      }));
-    }
-  };
+    return;
+  }
+
+  setSelectedMainTrip(id);
+
+  // skibums kan ikke kombineres med sydafrika
+  if (id === "skibums") {
+    setSelectedGlobalTrips((prev) => ({
+      ...prev,
+      "south-africa": false,
+    }));
+  }
+};
 
   const toggleGlobalTrip = (id) => {
     setSelectedGlobalTrips((prev) => {
@@ -228,7 +240,7 @@ const basePrice =
             const availableSeasons = DATA.filter((s) =>
               s.label.includes(year)
             ).map((s) =>
-              s.label.includes("Forår") ? "Forår" : "Efterår"
+              s.label.includes("juni") ? "Forår" : "Efterår"
             );
 
             if (!availableSeasons.includes(selectedSeason)) {
