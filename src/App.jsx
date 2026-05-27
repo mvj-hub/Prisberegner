@@ -119,25 +119,22 @@ const filteredStays = DATA.filter((s) => {
   return yearMatch && seasonMatch;
 });
 
-const filteredStays = DATA.filter((s) => {
-  const yearMatch = s.label.includes(selectedYear);
-  const seasonMatch = s.label.includes(selectedSeason);
-
-  return yearMatch && seasonMatch;
-});
-  const isMobile =
+const isMobile =
     typeof window !== "undefined" && window.innerWidth < 768;
 
   useEffect(() => {
-    setSelectedMainTrip(null);
+  // nulstil hovedfag
+  setSelectedMainTrip(null);
 
-    const defaults = {};
-    selectedStay.globalTrips.forEach((t) => {
-      defaults[t.id] = !!t.required;
-    });
+  // nulstil fællesrejser
+  const defaults = {};
 
-    setSelectedGlobalTrips(defaults);
-  }, [selectedStayId]);
+  selectedStay.globalTrips.forEach((t) => {
+    defaults[t.id] = !!t.required;
+  });
+
+  setSelectedGlobalTrips(defaults);
+}, [selectedStayId]);
 
   const handleMainTripChange = (id) => {
     setSelectedMainTrip(id);
@@ -327,7 +324,18 @@ const basePrice =
             Du kan kun vælge én hovedfagsrejse.
           </p>
 
-          {selectedStay.trips.map((trip) => {
+          {selectedStay.trips.length === 0 && (
+  <div
+    style={{
+      ...card,
+      color: "#666",
+      fontStyle: "italic",
+      background: "#fafafa",
+    }}
+  >
+    Ingen hovedfagsrejser i denne periode.
+  </div>
+)}{selectedStay.trips.map((trip) => {
             const selected = selectedMainTrip === trip.id;
 
             return (
@@ -371,7 +379,18 @@ const basePrice =
         <section style={{ marginTop: 30 }}>
           <h2>3. Fælles rejser</h2>
 
-          {selectedStay.globalTrips.map((trip) => {
+          {selectedStay.globalTrips.length === 0 && (
+  <div
+    style={{
+      ...card,
+      color: "#666",
+      fontStyle: "italic",
+      background: "#fafafa",
+    }}
+  >
+    Ingen fælles rejser i denne periode
+  </div>
+)}{selectedStay.globalTrips.map((trip) => {
             const disabled =
               trip.id === "south-africa" &&
               selectedMainTrip === "skibums";
