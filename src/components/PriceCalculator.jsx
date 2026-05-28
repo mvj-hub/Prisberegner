@@ -637,28 +637,27 @@ export default function PriceCalculator() {
 
       {isMobile && (
         <>
-          <div
-            onClick={() => setIsSheetOpen(true)}
-            style={{
-              position: "fixed",
-              bottom: 16,
-              left: 16,
-              right: 16,
-              background: COLORS.primary,
-              color: "#fff",
-              padding: 16,
-              textAlign: "center",
-              fontWeight: 700,
-              zIndex: 999,
-              borderRadius: 18,
-              boxShadow:
-                "0 10px 30px rgba(0,0,0,0.2)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            {total.toLocaleString("da-DK")} kr ·
-            Se detaljer
-          </div>
+<div
+  onClick={() => setIsSheetOpen(true)}
+  style={{
+    position: "sticky",
+    bottom: 16,
+    marginTop: 24,
+    background: COLORS.primary,
+    color: "#fff",
+    padding: 16,
+    textAlign: "center",
+    fontWeight: 700,
+    zIndex: 999,
+    borderRadius: 18,
+    boxShadow:
+      "0 10px 30px rgba(0,0,0,0.2)",
+    cursor: "pointer",
+  }}
+>
+  {total.toLocaleString("da-DK")} kr ·
+  Se detaljer
+</div>
 
           {isSheetOpen && (
             <>
