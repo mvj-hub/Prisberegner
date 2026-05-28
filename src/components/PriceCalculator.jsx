@@ -206,15 +206,21 @@ if (!selectedStay) {
   }, [selectedStay]);
 
   const handleMainTripChange = (id) => {
-    setSelectedMainTrip(id);
+  setSelectedMainTrip((prev) => {
+    // klik på samme = fjern valg
+    const nextValue = prev === id ? null : id;
 
-    if (id === "skibums") {
-      setSelectedGlobalTrips((prev) => ({
-        ...prev,
+    // Skibums må ikke kombineres med Sydafrika
+    if (nextValue === "skibums") {
+      setSelectedGlobalTrips((prevTrips) => ({
+        ...prevTrips,
         "south-africa": false,
       }));
     }
-  };
+
+    return nextValue;
+  });
+};
 
   const toggleGlobalTrip = (id) => {
     setSelectedGlobalTrips((prev) => {
@@ -438,7 +444,7 @@ if (!selectedStay) {
                   >
                     <span>
                       <input
-                        type="radio"
+                        type="checkbox"
                         checked={selected}
                         onChange={() =>
                           handleMainTripChange(
