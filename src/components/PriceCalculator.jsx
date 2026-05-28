@@ -147,12 +147,9 @@ export default function PriceCalculator() {
     };
 
     checkMobile();
-
     window.addEventListener("resize", checkMobile);
 
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const filteredStays = useMemo(() => {
@@ -174,15 +171,27 @@ export default function PriceCalculator() {
 
   const selectedStay = useMemo(() => {
     return (
-      DATA.find((s) => s.id === selectedStayId) || filteredStays[0]
+      DATA.find((s) => s.id === selectedStayId) ||
+      filteredStays[0] ||
+      DATA[0]
     );
   }, [selectedStayId, filteredStays]);
 
+  // ✅ FIX: sørger for altid gyldigt stay ved tomme filtreringer
   useEffect(() => {
-    if (!filteredStays.find((s) => s.id === selectedStayId)) {
-      setSelectedStayId(filteredStays[0]?.id);
+    if (filteredStays.length === 0) {
+      const fallback =
+        DATA.find((s) => s.id.split("-")[1] === selectedYear) ||
+        DATA[0];
+
+      setSelectedStayId(fallback.id);
+      return;
     }
-  }, [filteredStays, selectedStayId]);
+
+    if (!filteredStays.find((s) => s.id === selectedStayId)) {
+      setSelectedStayId(filteredStays[0].id);
+    }
+  }, [filteredStays, selectedStayId, selectedYear]);
 
   useEffect(() => {
     if (!selectedStay) return;
@@ -190,7 +199,6 @@ export default function PriceCalculator() {
     setSelectedMainTrip(null);
 
     const defaults = {};
-
     selectedStay.globalTrips.forEach((t) => {
       defaults[t.id] = !!t.required;
     });
@@ -199,52 +207,34 @@ export default function PriceCalculator() {
   }, [selectedStay]);
 
   useEffect(() => {
-  const sendHeight = () => {
-    requestAnimationFrame(() => {
-      const height =
-        document.documentElement.scrollHeight;
+    const sendHeight = () => {
+      requestAnimationFrame(() => {
+        const height = document.documentElement.scrollHeight;
 
-      window.parent.postMessage(
-        {
-          type: "PRICE_CALCULATOR_HEIGHT",
-          height: height + 20,
-        },
-        "*"
-      );
-    });
-  };
+        window.parent.postMessage(
+          {
+            type: "PRICE_CALCULATOR_HEIGHT",
+            height: height + 20,
+          },
+          "*"
+        );
+      });
+    };
 
-  sendHeight();
+    sendHeight();
+    window.addEventListener("resize", sendHeight);
 
-  window.addEventListener("resize", sendHeight);
-
-  return () => {
-    window.removeEventListener(
-      "resize",
-      sendHeight
-    );
-  };
-}, [
-  selectedStayId,
-  selectedMainTrip,
-  selectedGlobalTrips,
-  isSheetOpen,
-]);
+    return () => window.removeEventListener("resize", sendHeight);
+  }, [selectedStayId, selectedMainTrip, selectedGlobalTrips, isSheetOpen]);
 
   if (!selectedStay) return null;
 
-  const years = [
-    ...new Set(DATA.map((s) => s.id.split("-")[1])),
-  ];
+  const years = [...new Set(DATA.map((s) => s.id.split("-")[1]))];
 
   const seasonsForYear = [
     ...new Set(
-      DATA.filter(
-        (s) => s.id.split("-")[1] === selectedYear
-      ).map((s) =>
-        s.id.startsWith("foraar")
-          ? "Forår"
-          : "Efterår"
+      DATA.filter((s) => s.id.split("-")[1] === selectedYear).map((s) =>
+        s.id.startsWith("foraar") ? "Forår" : "Efterår"
       )
     ),
   ];
@@ -294,12 +284,9 @@ export default function PriceCalculator() {
   const mainTripPrice =
     selectedStay.trips.find((t) => t.id === selectedMainTrip)?.price || 0;
 
-  const globalTripsPrice =
-    selectedStay.globalTrips.reduce((sum, t) => {
-      return selectedGlobalTrips[t.id]
-        ? sum + t.price
-        : sum;
-    }, 0);
+  const globalTripsPrice = selectedStay.globalTrips.reduce((sum, t) => {
+    return selectedGlobalTrips[t.id] ? sum + t.price : sum;
+  }, 0);
 
   const total =
     basePrice +
