@@ -199,31 +199,37 @@ export default function PriceCalculator() {
   }, [selectedStay]);
 
   useEffect(() => {
-    const sendHeight = () => {
-      const height = document.documentElement.scrollHeight;
+  const sendHeight = () => {
+    requestAnimationFrame(() => {
+      const height =
+        document.documentElement.scrollHeight;
 
       window.parent.postMessage(
         {
           type: "PRICE_CALCULATOR_HEIGHT",
-          height,
+          height: height + 20,
         },
         "*"
       );
-    };
+    });
+  };
 
-    sendHeight();
+  sendHeight();
 
-    const resizeObserver = new ResizeObserver(sendHeight);
+  window.addEventListener("resize", sendHeight);
 
-    resizeObserver.observe(document.body);
-
-    window.addEventListener("resize", sendHeight);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", sendHeight);
-    };
-  }, [isSheetOpen, selectedStayId, selectedMainTrip, selectedGlobalTrips]);
+  return () => {
+    window.removeEventListener(
+      "resize",
+      sendHeight
+    );
+  };
+}, [
+  selectedStayId,
+  selectedMainTrip,
+  selectedGlobalTrips,
+  isSheetOpen,
+]);
 
   if (!selectedStay) return null;
 
