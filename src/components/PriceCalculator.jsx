@@ -47,7 +47,7 @@ const DATA = [
 
   {
     id: "foraar-2027-25",
-    label: "24. januar - 27. juni",
+    label: "4. januar - 27. juni",
     weeks: 25,
     weeklyPrice: 2200,
     trips: [
