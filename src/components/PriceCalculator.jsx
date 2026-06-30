@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 const ENROLLMENT_FEE = 1950;
 const MATERIAL_PRICE_PER_WEEK = 115;
+const SINGLE_ROOM_PRICE_PER_WEEK = 500;
 
 const COLORS = {
   primary: "#ea8115",
@@ -134,12 +135,13 @@ const DATA = [
 ];
 
 export default function PriceCalculator() {
-  const [selectedYear, setSelectedYear] = useState("2026");
+   [selectedYear, setSelectedYear] = useState("2026");
   const [selectedSeason, setSelectedSeason] = useState("Efterår");
   const [selectedMainTrip, setSelectedMainTrip] = useState(null);
   const [selectedGlobalTrips, setSelectedGlobalTrips] = useState({});
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [roomType, setRoomType] = useState("double");
 
   useEffect(() => {
     const checkMobile = () => {
@@ -278,8 +280,14 @@ export default function PriceCalculator() {
 
   const materialPrice =
     selectedStay.weeks * MATERIAL_PRICE_PER_WEEK;
-
-  const basePrice = schoolPrice + materialPrice;
+const roomPrice =
+  roomType === "single"
+    ? selectedStay.weeks * SINGLE_ROOM_PRICE_PER_WEEK
+    : 0;
+const basePrice =
+  schoolPrice +
+  materialPrice +
+  roomPrice;
 
   const mainTripPrice =
     selectedStay.trips.find((t) => t.id === selectedMainTrip)?.price || 0;
@@ -431,9 +439,81 @@ export default function PriceCalculator() {
             );
           })}
         </section>
+<section style={{ marginTop: 30 }}>
+  <h2>2. Værelse</h2>
 
+  <div
+    onClick={() => setRoomType("double")}
+    style={{
+      ...card,
+      cursor: "pointer",
+      background:
+        roomType === "double"
+          ? COLORS.soft
+          : "#fff",
+      border:
+        roomType === "double"
+          ? `2px solid ${COLORS.primary}`
+          : "1px solid #ddd",
+    }}
+  >
+    <label
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
+      <span>
+        <input
+          type="radio"
+          checked={roomType === "double"}
+          onChange={() => setRoomType("double")}
+        />{" "}
+        Dobbeltværelse
+      </span>
+
+      <strong>Inkluderet</strong>
+    </label>
+  </div>
+
+  <div
+    onClick={() => setRoomType("single")}
+    style={{
+      ...card,
+      cursor: "pointer",
+      background:
+        roomType === "single"
+          ? COLORS.soft
+          : "#fff",
+      border:
+        roomType === "single"
+          ? `2px solid ${COLORS.primary}`
+          : "1px solid #ddd",
+    }}
+  >
+    <label
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
+      <span>
+        <input
+          type="radio"
+          checked={roomType === "single"}
+          onChange={() => setRoomType("single")}
+        />{" "}
+        Enkeltværelse
+      </span>
+
+      <strong>
+        +{SINGLE_ROOM_PRICE_PER_WEEK.toLocaleString("da-DK")} kr./uge
+      </strong>
+    </label>
+  </div>
+</section>
         <section style={{ marginTop: 30 }}>
-          <h2>2. Hovedfagsrejser</h2>
+          <h2>3. Hovedfagsrejser</h2>
 
           {selectedStay.trips.length === 0 ? (
             <p style={{ color: "#666" }}>
@@ -501,7 +581,7 @@ export default function PriceCalculator() {
         </section>
 
         <section style={{ marginTop: 30 }}>
-          <h2>3. Fælles rejser</h2>
+          <h2>4. Fælles rejser</h2>
 
           {selectedStay.globalTrips.map((trip) => {
             const disabled =
@@ -594,7 +674,9 @@ export default function PriceCalculator() {
             Materialepris:{" "}
             {materialPrice.toLocaleString("da-DK")} kr.
           </p>
-
+<p>
+  Værelse: {roomPrice.toLocaleString("da-DK")} kr.
+</p>
           <p>
             Hovedfagsrejse:{" "}
             {mainTripPrice.toLocaleString("da-DK")} kr.
