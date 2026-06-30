@@ -135,13 +135,16 @@ const DATA = [
 ];
 
 export default function PriceCalculator() {
-   [selectedYear, setSelectedYear] = useState("2026");
+  const [selectedYear, setSelectedYear] = useState("2026");
   const [selectedSeason, setSelectedSeason] = useState("Efterår");
   const [selectedMainTrip, setSelectedMainTrip] = useState(null);
   const [selectedGlobalTrips, setSelectedGlobalTrips] = useState({});
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [roomType, setRoomType] = useState("double");
+
+  const canChooseSingleRoom =
+    selectedYear === "2026" && selectedSeason === "Efterår";
 
   useEffect(() => {
     const checkMobile = () => {
@@ -209,6 +212,12 @@ export default function PriceCalculator() {
   }, [selectedStay]);
 
   useEffect(() => {
+    if (!canChooseSingleRoom) {
+      setRoomType("double");
+    }
+  }, [canChooseSingleRoom]);
+
+  useEffect(() => {
     const sendHeight = () => {
       requestAnimationFrame(() => {
         const height = document.documentElement.scrollHeight;
@@ -227,7 +236,7 @@ export default function PriceCalculator() {
     window.addEventListener("resize", sendHeight);
 
     return () => window.removeEventListener("resize", sendHeight);
-  }, [selectedStayId, selectedMainTrip, selectedGlobalTrips, isSheetOpen]);
+  }, [selectedStayId, selectedMainTrip, selectedGlobalTrips, isSheetOpen, roomType]);
 
   if (!selectedStay) return null;
 
@@ -280,11 +289,12 @@ export default function PriceCalculator() {
 
   const materialPrice =
     selectedStay.weeks * MATERIAL_PRICE_PER_WEEK;
-const roomPrice =
-  roomType === "single"
-    ? selectedStay.weeks * SINGLE_ROOM_PRICE_PER_WEEK
-    : 0;
-const basePrice =
+  const roomPrice =
+    canChooseSingleRoom && roomType === "single"
+      ? selectedStay.weeks * SINGLE_ROOM_PRICE_PER_WEEK
+      : 0;
+
+  const basePrice =
   schoolPrice +
   materialPrice +
   roomPrice;
@@ -439,7 +449,9 @@ const basePrice =
             );
           })}
         </section>
-<section style={{ marginTop: 30 }}>
+
+        {canChooseSingleRoom && (
+          <section style={{ marginTop: 30 }}>
   <h2>2. Værelse</h2>
 
   <div
@@ -511,7 +523,9 @@ const basePrice =
       </strong>
     </label>
   </div>
-</section>
+          </section>
+        )}
+
         <section style={{ marginTop: 30 }}>
           <h2>3. Hovedfagsrejser</h2>
 
@@ -771,6 +785,14 @@ const basePrice =
                 <p>
                   Materialepris:{" "}
                   {materialPrice.toLocaleString(
+                    "da-DK"
+                  )}{" "}
+                  kr.
+                </p>
+
+                <p>
+                  Værelse:{" "}
+                  {roomPrice.toLocaleString(
                     "da-DK"
                   )}{" "}
                   kr.
