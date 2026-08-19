@@ -476,7 +476,7 @@ export default function PriceCalculator() {
 
         {canChooseSingleRoom && (
           <section style={{ marginTop: 30 }}>
-  <h2>2. Tillæg for enkeltværelse</h2>
+  <h2>2. Værelse</h2>
 
   <div
     onClick={() => setRoomType("double")}
@@ -716,7 +716,7 @@ export default function PriceCalculator() {
             {materialPrice.toLocaleString("da-DK")} kr.
           </p>
 <p>
-  Værelse: {roomPrice.toLocaleString("da-DK")} kr.
+  Tillæg for enkeltværelse: {roomPrice.toLocaleString("da-DK")} kr.
 </p>
           <p>
             Hovedfagsrejse:{" "}
@@ -818,7 +818,7 @@ export default function PriceCalculator() {
                 </p>
 
                 <p>
-                  Værelse:{" "}
+                  Tillæg for enkeltværelse:{" "}
                   {roomPrice.toLocaleString(
                     "da-DK"
                   )}{" "}
