@@ -121,6 +121,7 @@ const DATA = [
     ],
     globalTrips: [
       { id: "south-africa", label: "Sydafrika", price: 17000 },
+      { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
     ],
   },
 
@@ -132,6 +133,7 @@ const DATA = [
     trips: [],
     globalTrips: [
       { id: "south-africa", label: "Sydafrika", price: 17000 },
+      { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
     ],
   },
 ];
@@ -475,7 +477,7 @@ export default function PriceCalculator() {
 
         {canChooseSingleRoom && (
           <section style={{ marginTop: 30 }}>
-  <h2>2. Værelse</h2>
+  <h2>2. Tillæg for enkeltværelse</h2>
 
   <div
     onClick={() => setRoomType("double")}
