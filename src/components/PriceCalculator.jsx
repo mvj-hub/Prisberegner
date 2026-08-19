@@ -147,8 +147,7 @@ export default function PriceCalculator() {
   const [isMobile, setIsMobile] = useState(false);
   const [roomType, setRoomType] = useState("double");
 
-  const canChooseSingleRoom =
-    selectedYear === "2026" && selectedSeason === "Efterår";
+  const canChooseSingleRoom =true;
 
   useEffect(() => {
     const checkMobile = () => {
