@@ -32,6 +32,7 @@ const DATA = [
     ],
     globalTrips: [
       { id: "south-africa", label: "Sydafrika", price: 15750 },
+      { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
     ],
   },
 
@@ -43,6 +44,7 @@ const DATA = [
     trips: [],
     globalTrips: [
       { id: "south-africa", label: "Sydafrika", price: 15750 },
+      { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
     ],
   },
 
@@ -261,6 +263,13 @@ export default function PriceCalculator() {
         }));
       }
 
+      if (nextValue === "kaprun") {
+        setSelectedGlobalTrips((prevTrips) => ({
+          ...prevTrips,
+          "south-africa": false,
+        }));
+      }
+
       return nextValue;
     });
   };
@@ -275,9 +284,23 @@ export default function PriceCalculator() {
       if (
         id === "south-africa" &&
         next[id] &&
-        selectedMainTrip === "skibums"
+        (selectedMainTrip === "skibums" || selectedGlobalTrips["kaprun"])
       ) {
         setSelectedMainTrip(null);
+        setSelectedGlobalTrips((prevTrips) => ({
+          ...prevTrips,
+          "kaprun": false,
+        }));
+      }
+
+      if (
+        id === "kaprun" &&
+        next[id]
+      ) {
+        setSelectedGlobalTrips((prevTrips) => ({
+          ...prevTrips,
+          "south-africa": false,
+        }));
       }
 
       return next;
@@ -599,8 +622,11 @@ export default function PriceCalculator() {
 
           {selectedStay.globalTrips.map((trip) => {
             const disabled =
-              trip.id === "south-africa" &&
-              selectedMainTrip === "skibums";
+              (trip.id === "south-africa" &&
+                (selectedMainTrip === "skibums" ||
+                  selectedGlobalTrips["kaprun"])) ||
+              (trip.id === "kaprun" &&
+                !!selectedGlobalTrips["south-africa"]);
 
             const checked =
               selectedGlobalTrips[trip.id];
