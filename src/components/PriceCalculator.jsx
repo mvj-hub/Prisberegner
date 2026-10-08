@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 const ENROLLMENT_FEE = 1950;
-const MATERIAL_PRICE_PER_WEEK = 115;
+const MATERIAL_PRICE_PER_WEEK = 130;
 const SINGLE_ROOM_PRICE_PER_WEEK = 500;
 
 const COLORS = {
@@ -12,41 +12,6 @@ const COLORS = {
 };
 
 const DATA = [
-  {
-    id: "efteraar-2026-19",
-    label: "10. august - 20. december",
-    weeks: 19,
-    weeklyPrice: 2150,
-    trips: [
-      {
-        id: "bouldering-kjuge",
-        label: "Klatrerejse til Kjugekull (Bouldering, 1. periode)",
-        price: 3500,
-      },
-      {
-        id: "friluft-norge",
-        label: "Vandring i Norge (Friluftsliv, 1. periode)",
-        price: 4000,
-      },
-      { id: "skibums", label: "Skibums", price: 20500 },
-    ],
-    globalTrips: [
-      { id: "south-africa", label: "Sydafrika", price: 15750 },
-      { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
-    ],
-  },
-
-  {
-    id: "efteraar-2026-13",
-    label: "21. september - 20. december",
-    weeks: 13,
-    weeklyPrice: 2150,
-    trips: [],
-    globalTrips: [
-      { id: "south-africa", label: "Sydafrika", price: 15750 },
-      { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
-    ],
-  },
 
   {
     id: "foraar-2027-25",
@@ -103,8 +68,8 @@ const DATA = [
 
   {
     id: "efteraar-2027-18",
-    label: "16. august - 19. december",
-    weeks: 18,
+    label: "7. august - 17. december",
+    weeks: 19,
     weeklyPrice: 2200,
     trips: [
       {
@@ -127,7 +92,7 @@ const DATA = [
 
   {
     id: "efteraar-2027-13",
-    label: "20. september - 19. december",
+    label: "20. september - 17. december",
     weeks: 13,
     weeklyPrice: 2200,
     trips: [],
