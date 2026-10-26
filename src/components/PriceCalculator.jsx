@@ -104,8 +104,15 @@ const DATA = [
 ];
 
 export default function PriceCalculator() {
-  const [selectedYear, setSelectedYear] = useState("2026");
-  const [selectedSeason, setSelectedSeason] = useState("Efterår");
+
+const [selectedYear, setSelectedYear] = useState(
+  DATA[0]?.id.split("-")[1] || String(new Date().getFullYear())
+);
+
+const [selectedSeason, setSelectedSeason] = useState(
+  DATA[0]?.id.startsWith("foraar") ? "Forår" : "Efterår"
+);
+
   const [selectedMainTrip, setSelectedMainTrip] = useState(null);
   const [selectedGlobalTrips, setSelectedGlobalTrips] = useState({});
   const [isSheetOpen, setIsSheetOpen] = useState(false);
