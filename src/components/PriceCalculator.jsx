@@ -68,7 +68,7 @@ const DATA = [
 
   {
     id: "efteraar-2027-18",
-    label: "7. august - 17. december",
+    label: "9. august - 17. december",
     weeks: 19,
     weeklyPrice: 2200,
     trips: [
