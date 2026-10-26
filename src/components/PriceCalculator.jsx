@@ -101,6 +101,61 @@ const DATA = [
       { id: "kaprun", label: "Skitur til Kaprun", price: 7500 },
     ],
   },
+
+  
+  {
+    id: "foraar-2028-25",
+    label: "3. januar - 25. juni",
+    weeks: 25,
+    weeklyPrice: 2250,
+    trips: [
+      {
+        id: "friluft-norge",
+        label: "Fjeldski i Norge (Friluftsliv, 1. periode)",
+        price: 4500,
+      },
+    ],
+    globalTrips: [
+      {
+        id: "catalonia",
+        label: "Catalonien (obligatorisk)",
+        price: 7600,
+        required: true,
+      },
+      {
+        id: "alpine",
+        label: "Alpin skitur i Italien",
+        price: 7500,
+      },
+      {
+        id: "fontainebleau",
+        label: "Klatretur til Fontainebleau i Frankrig",
+        price: 4500,
+      },
+    ],
+  },
+
+  {
+    id: "foraar-2028-16",
+    label: "6. marts - 25. juni",
+    weeks: 16,
+    weeklyPrice: 2250,
+    trips: [],
+    globalTrips: [
+      {
+        id: "catalonia",
+        label: "Catalonien (obligatorisk)",
+        price: 7600,
+        required: true,
+      },
+      {
+        id: "fontainebleau",
+        label: "Klatretur til Fontainebleau i Frankrig",
+        price: 4500,
+      },
+    ],
+  },
+
 ];
 
 export default function PriceCalculator() {
