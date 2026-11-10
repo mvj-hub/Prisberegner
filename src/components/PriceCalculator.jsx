@@ -1,8 +1,10 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 
 const ENROLLMENT_FEE = 1950;
 const MATERIAL_PRICE_PER_WEEK = 130;
 const SINGLE_ROOM_PRICE_PER_WEEK = 500;
+const PITSTOP_DISCOUNT_PER_WEEK = 400;
 
 const COLORS = {
   primary: "#ea8115",
@@ -102,7 +104,6 @@ const DATA = [
     ],
   },
 
-  
   {
     id: "foraar-2028-25",
     label: "3. januar - 25. juni",
@@ -174,7 +175,10 @@ const [selectedSeason, setSelectedSeason] = useState(
   const [isMobile, setIsMobile] = useState(false);
   const [roomType, setRoomType] = useState("double");
 
-  const canChooseSingleRoom =true;
+  // NYT: State til Pitstop-rabat
+  const [hasPitstopDiscount, setHasPitstopDiscount] = useState(false);
+
+  const canChooseSingleRoom = true;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -212,7 +216,7 @@ const [selectedSeason, setSelectedSeason] = useState(
     );
   }, [selectedStayId, filteredStays]);
 
-  // ✅ FIX: sørger for altid gyldigt stay ved tomme filtreringer
+  // Sørger for altid gyldigt stay ved tomme filtreringer
   useEffect(() => {
     if (filteredStays.length === 0) {
       const fallback =
@@ -247,6 +251,7 @@ const [selectedSeason, setSelectedSeason] = useState(
     }
   }, [canChooseSingleRoom]);
 
+  // Automatisk højdejustering til hjemmesiden
   useEffect(() => {
     const sendHeight = () => {
       requestAnimationFrame(() => {
@@ -266,7 +271,14 @@ const [selectedSeason, setSelectedSeason] = useState(
     window.addEventListener("resize", sendHeight);
 
     return () => window.removeEventListener("resize", sendHeight);
-  }, [selectedStayId, selectedMainTrip, selectedGlobalTrips, isSheetOpen, roomType]);
+  }, [
+    selectedStayId,
+    selectedMainTrip,
+    selectedGlobalTrips,
+    isSheetOpen,
+    roomType,
+    hasPitstopDiscount,
+  ]);
 
   if (!selectedStay) return null;
 
@@ -335,20 +347,23 @@ const [selectedSeason, setSelectedSeason] = useState(
     });
   };
 
+  // PRISBEREGNINGER
+
   const schoolPrice =
     selectedStay.weeks * selectedStay.weeklyPrice;
 
   const materialPrice =
     selectedStay.weeks * MATERIAL_PRICE_PER_WEEK;
+
   const roomPrice =
     canChooseSingleRoom && roomType === "single"
       ? selectedStay.weeks * SINGLE_ROOM_PRICE_PER_WEEK
       : 0;
 
   const basePrice =
-  schoolPrice +
-  materialPrice +
-  roomPrice;
+    schoolPrice +
+    materialPrice +
+    roomPrice;
 
   const mainTripPrice =
     selectedStay.trips.find((t) => t.id === selectedMainTrip)?.price || 0;
@@ -357,11 +372,18 @@ const [selectedSeason, setSelectedSeason] = useState(
     return selectedGlobalTrips[t.id] ? sum + t.price : sum;
   }, 0);
 
+  // NYT: Beregning af Pitstop-rabat
+  const pitstopDiscount = hasPitstopDiscount
+    ? selectedStay.weeks * PITSTOP_DISCOUNT_PER_WEEK
+    : 0;
+
+  // NYT: Rabatten trækkes fra den samlede pris
   const total =
     basePrice +
     mainTripPrice +
     globalTripsPrice +
-    ENROLLMENT_FEE;
+    ENROLLMENT_FEE -
+    pitstopDiscount;
 
   const card = {
     border: "1px solid #e5e5e5",
@@ -503,77 +525,77 @@ const [selectedSeason, setSelectedSeason] = useState(
 
         {canChooseSingleRoom && (
           <section style={{ marginTop: 30 }}>
-  <h2>2. Værelse</h2>
+            <h2>2. Værelse</h2>
 
-  <div
-    onClick={() => setRoomType("double")}
-    style={{
-      ...card,
-      cursor: "pointer",
-      background:
-        roomType === "double"
-          ? COLORS.soft
-          : "#fff",
-      border:
-        roomType === "double"
-          ? `2px solid ${COLORS.primary}`
-          : "1px solid #ddd",
-    }}
-  >
-    <label
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <span>
-        <input
-          type="radio"
-          checked={roomType === "double"}
-          onChange={() => setRoomType("double")}
-        />{" "}
-        Dobbeltværelse
-      </span>
+            <div
+              onClick={() => setRoomType("double")}
+              style={{
+                ...card,
+                cursor: "pointer",
+                background:
+                  roomType === "double"
+                    ? COLORS.soft
+                    : "#fff",
+                border:
+                  roomType === "double"
+                    ? `2px solid ${COLORS.primary}`
+                    : "1px solid #ddd",
+              }}
+            >
+              <label
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>
+                  <input
+                    type="radio"
+                    checked={roomType === "double"}
+                    onChange={() => setRoomType("double")}
+                  />{" "}
+                  Dobbeltværelse
+                </span>
 
-      <strong>Inkluderet</strong>
-    </label>
-  </div>
+                <strong>Inkluderet</strong>
+              </label>
+            </div>
 
-  <div
-    onClick={() => setRoomType("single")}
-    style={{
-      ...card,
-      cursor: "pointer",
-      background:
-        roomType === "single"
-          ? COLORS.soft
-          : "#fff",
-      border:
-        roomType === "single"
-          ? `2px solid ${COLORS.primary}`
-          : "1px solid #ddd",
-    }}
-  >
-    <label
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <span>
-        <input
-          type="radio"
-          checked={roomType === "single"}
-          onChange={() => setRoomType("single")}
-        />{" "}
-        Enkeltværelse
-      </span>
+            <div
+              onClick={() => setRoomType("single")}
+              style={{
+                ...card,
+                cursor: "pointer",
+                background:
+                  roomType === "single"
+                    ? COLORS.soft
+                    : "#fff",
+                border:
+                  roomType === "single"
+                    ? `2px solid ${COLORS.primary}`
+                    : "1px solid #ddd",
+              }}
+            >
+              <label
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>
+                  <input
+                    type="radio"
+                    checked={roomType === "single"}
+                    onChange={() => setRoomType("single")}
+                  />{" "}
+                  Enkeltværelse
+                </span>
 
-      <strong>
-        +{SINGLE_ROOM_PRICE_PER_WEEK.toLocaleString("da-DK")} kr./uge
-      </strong>
-    </label>
-  </div>
+                <strong>
+                  +{SINGLE_ROOM_PRICE_PER_WEEK.toLocaleString("da-DK")} kr./uge
+                </strong>
+              </label>
+            </div>
           </section>
         )}
 
@@ -713,7 +735,69 @@ const [selectedSeason, setSelectedSeason] = useState(
             );
           })}
         </section>
+
+        {/* 5. RABATTER */}
+
+        <section style={{ marginTop: 30 }}>
+          <h2>5. Rabatter</h2>
+
+          <div
+            style={{
+              ...card,
+              cursor: "pointer",
+              background: hasPitstopDiscount ? COLORS.soft : "#fff",
+              border: hasPitstopDiscount
+                ? `2px solid ${COLORS.primary}`
+                : "1px solid #ddd",
+            }}
+          >
+            <label
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 12,
+                cursor: "pointer",
+              }}
+            >
+              <span>
+                <input
+                  type="checkbox"
+                  checked={hasPitstopDiscount}
+                  onChange={(e) =>
+                    setHasPitstopDiscount(e.target.checked)
+                  }
+                />{" "}
+                <strong>Pitstop-rabat</strong>
+
+                <span
+                  style={{
+                    color: "#666",
+                    display: "block",
+                    marginTop: 5,
+                    marginLeft: 23,
+                  }}
+                >
+                  400 kr. pr. uge
+                </span>
+              </span>
+
+              <strong
+                style={{
+                  color: COLORS.primary,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                -{(
+                  selectedStay.weeks * PITSTOP_DISCOUNT_PER_WEEK
+                ).toLocaleString("da-DK")} kr.
+              </strong>
+            </label>
+          </div>
+        </section>
       </div>
+
+      {/* DESKTOP: PRISOVERSIGT */}
 
       {!isMobile && (
         <div
@@ -742,9 +826,12 @@ const [selectedSeason, setSelectedSeason] = useState(
             Materialepris:{" "}
             {materialPrice.toLocaleString("da-DK")} kr.
           </p>
-<p>
-  Tillæg for enkeltværelse: {roomPrice.toLocaleString("da-DK")} kr.
-</p>
+
+          <p>
+            Tillæg for enkeltværelse:{" "}
+            {roomPrice.toLocaleString("da-DK")} kr.
+          </p>
+
           <p>
             Hovedfagsrejse:{" "}
             {mainTripPrice.toLocaleString("da-DK")} kr.
@@ -766,35 +853,45 @@ const [selectedSeason, setSelectedSeason] = useState(
             kr.
           </p>
 
+          {/* NYT: Pitstop-rabat i desktopoversigten */}
+
+          {pitstopDiscount > 0 && (
+            <p style={{ color: "#25805e", fontWeight: 700 }}>
+              Pitstop-rabat: -{pitstopDiscount.toLocaleString("da-DK")} kr.
+            </p>
+          )}
+
           <h1 style={{ color: COLORS.primary }}>
             {total.toLocaleString("da-DK")} kr.
           </h1>
         </div>
       )}
 
+      {/* MOBIL: PRISBJÆLKE OG PRISOVERSIGT */}
+
       {isMobile && (
         <>
-<div
-  onClick={() => setIsSheetOpen(true)}
-  style={{
-    position: "sticky",
-    bottom: 16,
-    marginTop: 24,
-    background: COLORS.primary,
-    color: "#fff",
-    padding: 16,
-    textAlign: "center",
-    fontWeight: 700,
-    zIndex: 999,
-    borderRadius: 18,
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,0.2)",
-    cursor: "pointer",
-  }}
->
-  {total.toLocaleString("da-DK")} kr ·
-  Se detaljer
-</div>
+          <div
+            onClick={() => setIsSheetOpen(true)}
+            style={{
+              position: "sticky",
+              bottom: 16,
+              marginTop: 24,
+              background: COLORS.primary,
+              color: "#fff",
+              padding: 16,
+              textAlign: "center",
+              fontWeight: 700,
+              zIndex: 999,
+              borderRadius: 18,
+              boxShadow:
+                "0 10px 30px rgba(0,0,0,0.2)",
+              cursor: "pointer",
+            }}
+          >
+            {total.toLocaleString("da-DK")} kr ·
+            Se detaljer
+          </div>
 
           {isSheetOpen && (
             <>
@@ -875,6 +972,14 @@ const [selectedSeason, setSelectedSeason] = useState(
                   )}{" "}
                   kr.
                 </p>
+
+                {/* NYT: Pitstop-rabat i mobiloversigten */}
+
+                {pitstopDiscount > 0 && (
+                  <p style={{ color: "#25805e", fontWeight: 700 }}>
+                    Pitstop-rabat: -{pitstopDiscount.toLocaleString("da-DK")} kr.
+                  </p>
+                )}
 
                 <h1
                   style={{
