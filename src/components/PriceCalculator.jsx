@@ -555,6 +555,7 @@ const [selectedSeason, setSelectedSeason] = useState(
                   }
                 />{" "}
                 <strong>Pitstop-rabat</strong>
+                <p>Hvis du holder pause fra studie eller er mellem uddannelser</p>
 
                 <span
                   style={{
