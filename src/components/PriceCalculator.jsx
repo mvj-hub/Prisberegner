@@ -522,10 +522,69 @@ const [selectedSeason, setSelectedSeason] = useState(
             );
           })}
         </section>
+ {/* 2. RABATTER */}
 
+        <section style={{ marginTop: 30 }}>
+          <h2>2. Rabatter</h2>
+
+          <div
+            style={{
+              ...card,
+              cursor: "pointer",
+              background: hasPitstopDiscount ? COLORS.soft : "#fff",
+              border: hasPitstopDiscount
+                ? `2px solid ${COLORS.primary}`
+                : "1px solid #ddd",
+            }}
+          >
+            <label
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 12,
+                cursor: "pointer",
+              }}
+            >
+              <span>
+                <input
+                  type="checkbox"
+                  checked={hasPitstopDiscount}
+                  onChange={(e) =>
+                    setHasPitstopDiscount(e.target.checked)
+                  }
+                />{" "}
+                <strong>Pitstop-rabat</strong>
+
+                <span
+                  style={{
+                    color: "#666",
+                    display: "block",
+                    marginTop: 5,
+                    marginLeft: 23,
+                  }}
+                >
+                  400 kr. pr. uge
+                </span>
+              </span>
+
+              <strong
+                style={{
+                  color: COLORS.primary,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                -{(
+                  selectedStay.weeks * PITSTOP_DISCOUNT_PER_WEEK
+                ).toLocaleString("da-DK")} kr.
+              </strong>
+            </label>
+          </div>
+        </section>
         {canChooseSingleRoom && (
           <section style={{ marginTop: 30 }}>
-            <h2>2. Værelse</h2>
+            
+            <h2>3. Værelse</h2>
 
             <div
               onClick={() => setRoomType("double")}
@@ -600,7 +659,7 @@ const [selectedSeason, setSelectedSeason] = useState(
         )}
 
         <section style={{ marginTop: 30 }}>
-          <h2>3. Hovedfagsrejser</h2>
+          <h2>4. Hovedfagsrejser</h2>
 
           {selectedStay.trips.length === 0 ? (
             <p style={{ color: "#666" }}>
@@ -668,7 +727,7 @@ const [selectedSeason, setSelectedSeason] = useState(
         </section>
 
         <section style={{ marginTop: 30 }}>
-          <h2>4. Fælles rejser</h2>
+          <h2>5. Fælles rejser</h2>
 
           {selectedStay.globalTrips.map((trip) => {
             const disabled =
@@ -736,65 +795,7 @@ const [selectedSeason, setSelectedSeason] = useState(
           })}
         </section>
 
-        {/* 5. RABATTER */}
-
-        <section style={{ marginTop: 30 }}>
-          <h2>5. Rabatter</h2>
-
-          <div
-            style={{
-              ...card,
-              cursor: "pointer",
-              background: hasPitstopDiscount ? COLORS.soft : "#fff",
-              border: hasPitstopDiscount
-                ? `2px solid ${COLORS.primary}`
-                : "1px solid #ddd",
-            }}
-          >
-            <label
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 12,
-                cursor: "pointer",
-              }}
-            >
-              <span>
-                <input
-                  type="checkbox"
-                  checked={hasPitstopDiscount}
-                  onChange={(e) =>
-                    setHasPitstopDiscount(e.target.checked)
-                  }
-                />{" "}
-                <strong>Pitstop-rabat</strong>
-
-                <span
-                  style={{
-                    color: "#666",
-                    display: "block",
-                    marginTop: 5,
-                    marginLeft: 23,
-                  }}
-                >
-                  400 kr. pr. uge
-                </span>
-              </span>
-
-              <strong
-                style={{
-                  color: COLORS.primary,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                -{(
-                  selectedStay.weeks * PITSTOP_DISCOUNT_PER_WEEK
-                ).toLocaleString("da-DK")} kr.
-              </strong>
-            </label>
-          </div>
-        </section>
+       
       </div>
 
       {/* DESKTOP: PRISOVERSIGT */}
